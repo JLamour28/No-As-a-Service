@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ultimate "NO" Button | When You Just Can't Deal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .button-container {
+            margin: 3rem 0;
+            perspective: 1000px;
+        }
+
+        #noButton {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            padding: 40px 80px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #noButton::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        #noButton:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        #noButton span {
+            position: relative;
+            z-index: 1;
+        }
+
+        #noButton:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Plate serving animation elements */
+        .plate-container {
+            position: relative;
+            margin: 3rem auto;
+            width: 100%;
+            max-width: 550px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plate {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle at 30% 30%, #fff, #e8e8e8);
+            border-radius: 50%;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.3),
+                inset 0 -5px 10px rgba(0,0,0,0.1),
+                inset 0 5px 10px rgba(255,255,255,0.8);
+            opacity: 0;
+            transform: translateY(100px) rotateX(-90deg);
+        }
+
+        .plate::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+            border: 3px solid rgba(200, 200, 200, 0.4);
+        }
+
+        .plate::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            border: 2px solid rgba(200, 200, 200, 0.2);
+        }
+
+        .reason-card {
+            position: absolute;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: #333;
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.3),
+                0 0 0 1px rgba(255,255,255,0.5);
+            max-width: 400px;
+            width: 90%;
+            opacity: 0;
+            transform: scale(0.5) translateY(-50px);
+        }
+
+        .reason-card::before {
+            content: '🍽️';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+        }
+
+        .reason-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            font-style: italic;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .quote-mark {
+            font-size: 4rem;
+            color: #f5576c;
+            opacity: 0.3;
+            line-height: 0;
+        }
+
+        .quote-start {
+            margin-bottom: -20px;
+        }
+
+        .quote-end {
+            text-align: right;
+            margin-top: -20px;
+        }
+
+        .stats {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        footer {
+            margin-top: 3rem;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            transition: border-bottom-color 0.3s;
+        }
+
+        footer a:hover {
+            border-bottom-color: white;
+        }
+
+        /* Sparkle effects */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            #noButton {
+                font-size: 1.8rem;
+                padding: 30px 50px;
+            }
+
+            .plate {
+                width: 350px;
+                height: 350px;
+            }
+
+            .reason-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .reason-text {
+                font-size: 1.1rem;
+            }
+
+            .plate-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>The Ultimate "NO" Button</h1>
+        <p class="subtitle">Press the button to be served a fresh excuse</p>
+
+        <div class="button-container">
+            <button id="noButton"><span>SAY NO</span></button>
+        </div>
+
+        <div class="plate-container">
+            <div class="plate"></div>
+            <div class="reason-card">
+                <div class="quote-mark quote-start">"</div>
+                <p class="reason-text">Ready to serve you a reason to decline...</p>
+                <div class="quote-mark quote-end">"</div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="clickCount">0</div>
+                <div class="stat-label">Times You've Said NO</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="sessionCount">0</div>
+                <div class="stat-label">Excuses Served</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Powered by the <a href="https://naas.isalman.dev/no" target="_blank">NO API</a></p>
+        </footer>
+    </div>
+
+    <!-- GSAP Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <script>
+        const button = document.getElementById('noButton');
+        const plate = document.querySelector('.plate');
+        const reasonCard = document.querySelector('.reason-card');
+        const reasonText = document.querySelector('.reason-text');
+        const clickCountEl = document.getElementById('clickCount');
+        const sessionCountEl = document.getElementById('sessionCount');
+
+        let totalClicks = parseInt(localStorage.getItem('totalNoClicks') || '0');
+        let sessionClicks = 0;
+        let isAnimating = false;
+
+        // Update display
+        clickCountEl.textContent = totalClicks;
+        sessionCountEl.textContent = sessionClicks;
+
+        // Create sparkles
+        function createSparkles() {
+            const container = document.querySelector('.plate-container');
+            for (let i = 0; i < 20; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                container.appendChild(sparkle);
+            }
+        }
+        createSparkles();
+
+        function animateSparkles() {
+            const sparkles = document.querySelectorAll('.sparkle');
+            sparkles.forEach((sparkle, index) => {
+                const angle = (Math.PI * 2 * index) / sparkles.length;
+                const distance = 150 + Math.random() * 100;
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+
+                gsap.fromTo(sparkle, 
+                    {
+                        x: 0,
+                        y: 0,
+                        opacity: 1,
+                        scale: 0
+                    },
+                    {
+                        x: x,
+                        y: y,
+                        opacity: 0,
+                        scale: 1,
+                        duration: 1,
+                        delay: 0.8 + Math.random() * 0.3,
+                        ease: "power2.out"
+                    }
+                );
+            });
+        }
+
+        async function servePlate() {
+            if (isAnimating) return;
+            isAnimating = true;
+            button.disabled = true;
+
+            // Button press animation
+            gsap.to(button, {
+                scale: 0.95,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 1,
+                ease: "power2.inOut"
+            });
+
+            try {
+                // Fetch the excuse
+                const response = await fetch('https://naas.isalman.dev/no');
+                if (!response.ok) throw new Error('API request failed');
+                const data = await response.json();
+
+                // Create the animation timeline
+                const tl = gsap.timeline();
+
+                // 1. Hide the current card
+                tl.to(reasonCard, {
+                    scale: 0.8,
+                    opacity: 0,
+                    duration: 0.3,
+                    ease: "power2.in"
+                });
+
+                // 2. Bring the plate from below
+                tl.to(plate, {
+                    opacity: 1,
+                    y: 0,
+                    rotateX: 0,
+                    duration: 0.8,
+                    ease: "back.out(1.2)"
+                }, "-=0.1");
+
+                // 3. Update the text while plate is visible
+                tl.call(() => {
+                    reasonText.textContent = data.reason;
+                });
+
+                // 4. Serve the card on the plate
+                tl.to(reasonCard, {
+                    scale: 1,
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    ease: "elastic.out(1, 0.6)"
+                }, "+=0.2");
+
+                // 5. Add sparkle effect
+                tl.call(animateSparkles, null, "-=0.4");
+
+                // 6. Slight bounce to emphasize the serve
+                tl.to(reasonCard, {
+                    y: -10,
+                    duration: 0.2,
+                    yoyo: true,
+                    repeat: 1,
+                    ease: "power1.inOut"
+                }, "-=0.2");
+
+                // Update stats
+                sessionClicks++;
+                totalClicks++;
+                localStorage.setItem('totalNoClicks', totalClicks);
+                
+                gsap.to(clickCountEl, {
+                    innerHTML: totalClicks,
+                    duration: 0.5,
+                    snap: { innerHTML: 1 },
+                    ease: "power2.out"
+                });
+                
+                gsap.to(sessionCountEl, {
+                    innerHTML: sessionClicks,
+                    duration: 0.5,
+                    snap: { innerHTML: 1 },
+                    ease: "power2.out"
+                });
+
+            } catch (error) {
+                reasonText.textContent = "Oops! The kitchen is closed. Try again in a moment!";
+                gsap.to(reasonCard, {
+                    scale: 1,
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: "back.out(1.5)"
+                });
+                console.error('Error fetching NO reason:', error);
+            } finally {
+                button.disabled = false;
+                isAnimating = false;
+            }
+        }
+
+        button.addEventListener('click', servePlate);
+
+        // Keyboard shortcut (Space or N)
+        document.addEventListener('keydown', (e) => {
+            if ((e.code === 'Space' || e.key === 'n' || e.key === 'N') && !button.disabled && !isAnimating) {
+                e.preventDefault();
+                servePlate();
+            }
+        });
+
+        // Initial entrance animation
+        gsap.from('h1', {
+            y: -50,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out"
+        });
+
+        gsap.from('.subtitle', {
+            y: -30,
+            opacity: 0,
+            duration: 1,
+            delay: 0.2,
+            ease: "power3.out"
+        });
+
+        gsap.from(button, {
+            scale: 0,
+            opacity: 0,
+            duration: 0.8,
+            delay: 0.4,
+            ease: "elastic.out(1, 0.5)"
+        });
+
+        gsap.from('.plate-container', {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            delay: 0.6,
+            ease: "power3.out"
+        });
+
+        gsap.from('.stats', {
+            y: 30,
+            opacity: 0,
+            duration: 1,
+            delay: 0.8,
+            ease: "power3.out"
+        });
+    </script>
+</body>
+</html>
